@@ -1,8 +1,7 @@
 <template>
   <div id="app">
     
-    <searchInput :searchInText='searchText'></searchInput>
-    站點名稱搜尋: <input type="text" v-model="serachText">
+    <searchInput  @changeText="updateMsg"></searchInput>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -85,8 +84,8 @@ export default {
       currentSort: "sno",
       isSortDesc: false,
       ubikeStops: [],
-      searchText: "12",
-      currentPage: 1
+      searchText: "",
+      currentPage: 1,
     };
   },
   components: {
@@ -168,6 +167,9 @@ export default {
         this.currentSort = sortType;
         this.isSortDesc = false;
       }
+    },
+    updateMsg(val) {
+      this.searchText = val;
     }
   },
   created() {
