@@ -1,9 +1,8 @@
 <template>
   <div id="app">
-    <p>
-      站點名稱搜尋: <input type="text" v-model="searchText">
-    </p>
-
+    
+    <searchInput :searchInText='searchText'></searchInput>
+    站點名稱搜尋: <input type="text" v-model="serachText">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -73,7 +72,7 @@
 <script>
 // 引入 bootstrap.css
 import "bootstrap/dist/css/bootstrap.css";
-
+import searchInput from './components/searchInput.vue'
 
 // 單頁顯示筆數
 const COUNT_OF_PAGE = 10;
@@ -86,9 +85,12 @@ export default {
       currentSort: "sno",
       isSortDesc: false,
       ubikeStops: [],
-      searchText: "",
+      searchText: "12",
       currentPage: 1
     };
+  },
+  components: {
+    searchInput,
   },
   computed: {
     filtedUbikeStops() {

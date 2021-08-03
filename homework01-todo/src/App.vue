@@ -4,22 +4,14 @@
     <div class="todo-lists">
       <h3>Todo List</h3>
       <ul>
-        <li v-for="i in todoLists" :key="i.id">
-          <label><input v-model="i.isDone" type="checkbox"> {{ i.title }}</label>
-        </li>
-        
-        <!-- <list-item v-for="i in todoLists" :key="i.id"></list-item> -->
+        <list-item :insideList="lists.filter(x => x.isDone === false)"></list-item>
       </ul>
     </div>
 
     <div class="done-lists">
       <h3>Done List</h3>
       <ul>
-        <li v-for="i in doneLists" :key="i.id">
-          <label><input v-model="i.isDone" type="checkbox"> {{ i.title }}</label>
-        </li>
-
-        <!-- <list-item v-for="i in doneLists" :key="i.id"></list-item> -->
+        <list-item :insideList="lists.filter(x => x.isDone === true)"></list-item>
       </ul>
     </div>
   </div>
@@ -28,6 +20,7 @@
 </template>
 
 <script>
+  import ListItem from './components/ListItem.vue';
 export default {
   name: 'App',
   data() {
@@ -49,6 +42,9 @@ export default {
         },
       ]
     }
+  },
+  components:{
+  ListItem,
   },
   computed: {
     todoLists() {
