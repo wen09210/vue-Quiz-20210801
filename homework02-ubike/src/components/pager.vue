@@ -22,15 +22,32 @@ export default {
   name: 'Pager',
   props: {
     currentPage: Number,
-    pagerEnd: Number,
-    setPage: Number,
-    pagerAddAmount: Number,
+    countOfPage: Number,
+    filtedUbikeStops: Object,
   },
    data() {
    return {
+     PAGINATION_MAX: 10,
    }},
+   computed: {
+    totalPageCount() {
+    // 計算總頁數
+    return Math.ceil(this.filtedUbikeStops.length / this.countOfPage);
+    },
+    pagerEnd() {
+    // 頁碼尾端
+    return this.totalPageCount <= this.PAGINATION_MAX ? this.totalPageCount : this.PAGINATION_MAX; }, pagerAddAmount() { // 頁碼位移
+      const tmp=this.totalPageCount <=this.PAGINATION_MAX ? 0 : this.currentPage + 4 - this.pagerEnd; return tmp <=0 ? 0 :
+      this.totalPageCount - (this.PAGINATION_MAX + tmp) < 0 ? this.totalPageCount - this.PAGINATION_MAX : tmp; }
+   },
    methods:{
-     
+        setPage(page) {
+        // 設定目前頁數
+        if (page < 1 || page> this.totalPageCount) {
+          return;
+          }
+          this.$emit("setPage", page);
+          },
    },
 
 }

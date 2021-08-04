@@ -10,9 +10,9 @@
 
     <!-- 頁籤 -->
     <pager :currentPage='currentPage'
-           :pagerEnd='pagerEnd'
-           :setPage='setPage'
-           :pagerAddAmount="pagerAddAmount"></pager>
+           :countOfPage='countOfPage'
+           :filtedUbikeStops='filtedUbikeStops'
+           @setPage="setPage"></pager>
     
 
   </div>
@@ -25,10 +25,6 @@ import searchInput from './components/searchInput.vue';
 import tableSheet from './components/tableSheet.vue';
 import pager from './components/pager.vue';
 
-// 單頁顯示筆數
-const COUNT_OF_PAGE = 10;
-// 頁碼最大數量
-const PAGINATION_MAX = 10;
 
 export default {
   data() {
@@ -38,6 +34,7 @@ export default {
       ubikeStops: [],
       searchText: "",
       currentPage: 1,
+      countOfPage: 10,
     };
   },
   components: {
@@ -62,57 +59,26 @@ export default {
     },
     slicedUbikeStops() {
       // 將排序的結果做分頁切割
-      const start = (this.currentPage - 1) * COUNT_OF_PAGE;
+      const start = (this.currentPage - 1) * this.countOfPage;
       const end =
-        start + COUNT_OF_PAGE <= this.sortedUbikeStops.length
-          ? start + COUNT_OF_PAGE
+        start + this.countOfPage <= this.sortedUbikeStops.length
+          ? start + this.countOfPage
           : this.sortedUbikeStops.length;
 
       return this.sortedUbikeStops.slice(start, end);
     },
-    totalPageCount() {
-      // 計算總頁數
-      return Math.ceil(this.filtedUbikeStops.length / COUNT_OF_PAGE);
-    },
-    pagerEnd() {
-      // 頁碼尾端
-      return this.totalPageCount <= PAGINATION_MAX
-        ? this.totalPageCount
-        : PAGINATION_MAX;
-    },
-    pagerAddAmount() {
-      // 頁碼位移
-      const tmp =
-        this.totalPageCount <= PAGINATION_MAX
-          ? 0
-          : this.currentPage + 4 - this.pagerEnd;
-
-      return tmp <= 0
-        ? 0
-        : this.totalPageCount - (PAGINATION_MAX + tmp) < 0
-        ? this.totalPageCount - PAGINATION_MAX
-        : tmp;
-    }
   },
   watch: {
     sortedUbikeStops() {
       // 當搜尋條件、排序變更時，強制切到第一頁
-      this.setPage(1);
-    }
+      // this.setPage(1);
+    },
   },
   methods: {
-    timeFormat(val) {
-      // 時間格式
-      const pattern = /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
-      return val.replace(pattern, "$1/$2/$3 $4:$5:$6");
-    },
-    setPage(page) {
-      // 設定目前頁數
-      if (page < 1 || page > this.totalPageCount) {
-        return;
-      }
-      this.currentPage = page;
-    },
+     setPage(page) {
+     // 設定目前頁數
+     this.currentPage = page;
+     },
     setSort(sortType) {
       // 切換排序
       if (sortType === this.currentSort) {
@@ -124,7 +90,7 @@ export default {
     },
     updateMsg(val) {
       this.searchText = val;
-    }
+    },
   },
   created() {
     // 欄位說明請參照:
