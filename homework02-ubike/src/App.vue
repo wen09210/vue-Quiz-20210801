@@ -71,7 +71,7 @@ export default {
   watch: {
     sortedUbikeStops() {
       // 當搜尋條件、排序變更時，強制切到第一頁
-      // this.setPage(1);
+       this.setPage(1);
     },
   },
   methods: {
