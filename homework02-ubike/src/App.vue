@@ -1,69 +1,19 @@
 <template>
   <div id="app">
     
-    <searchInput  @changeText="updateMsg"></searchInput>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>場站名稱</th>
-          <th>場站區域</th>
-          <th>
-            <div @click="setSort('sbi')">
-              目前可用車輛
-              <i 
-                v-if="currentSort === 'sbi'"
-                :class="{ 'fa-sort-asc': !isSortDesc, 'fa-sort-desc': isSortDesc }" 
-                class="fa" aria-hidden="true"></i>
-              <i v-else class="fa fa-sort" aria-hidden="true"></i>
-            </div>
-          </th>
-          <th>
-            <div @click="setSort('tot')">
-              總停車格
-              <i 
-                v-if="currentSort === 'tot'"
-                :class="{ 'fa-sort-asc': !isSortDesc, 'fa-sort-desc': isSortDesc }" 
-                class="fa" aria-hidden="true"></i>
-              <i v-else class="fa fa-sort" aria-hidden="true"></i>
-            </div>
-          </th>
-          <th>資料更新時間</th>
-        </tr>
-      </thead>
-      <tbody>
-      <tr v-for="s in slicedUbikeStops" :key="s.sno">
-        <td>{{ s.sno }}</td>
-        <td>{{ s.sna }}</td>
-        <td>{{ s.sarea }}</td>
-        <td>{{ s.sbi }}</td>
-        <td>{{ s.tot }}</td>
-        <td>{{ timeFormat(s.mday) }}</td>
-      </tr>
-      </tbody>
-    </table>
+    <search-input  @changeText="updateMsg"></search-input>
+    <table-sheet :tableData="slicedUbikeStops" 
+                :currentSort="currentSort"
+                :isSortDesc="isSortDesc"
+                @setSortIn="setSort"
+    ></table-sheet>
 
     <!-- 頁籤 -->
-    <nav v-if="pagerEnd > 0">
-      <ul class="pagination">
-        <li @click.prevent="setPage(currentPage - 1)" class="page-item">
-          <a class="page-link" href>Previous</a>
-        </li>
-
-        <li
-          v-for="i in pagerEnd"
-          :class="{ active: i + pagerAddAmount === currentPage }"
-          :key="i"
-          @click.prevent="setPage(i + pagerAddAmount)"
-          class="page-item">
-          <a class="page-link" href>{{ i + pagerAddAmount }}</a>
-        </li>
-
-        <li @click.prevent="setPage(currentPage + 1)" class="page-item">
-          <a class="page-link" href>Next</a>
-        </li>
-      </ul>
-    </nav>
+    <pager :currentPage='currentPage'
+           :pagerEnd='pagerEnd'
+           :setPage='setPage'
+           :pagerAddAmount="pagerAddAmount"></pager>
+    
 
   </div>
 </template>
@@ -71,7 +21,9 @@
 <script>
 // 引入 bootstrap.css
 import "bootstrap/dist/css/bootstrap.css";
-import searchInput from './components/searchInput.vue'
+import searchInput from './components/searchInput.vue';
+import tableSheet from './components/tableSheet.vue';
+import pager from './components/pager.vue';
 
 // 單頁顯示筆數
 const COUNT_OF_PAGE = 10;
@@ -90,6 +42,8 @@ export default {
   },
   components: {
     searchInput,
+    tableSheet,
+    pager,
   },
   computed: {
     filtedUbikeStops() {

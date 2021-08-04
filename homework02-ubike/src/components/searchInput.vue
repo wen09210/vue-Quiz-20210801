@@ -1,22 +1,19 @@
 <template>
   <p>
-    站點名稱搜尋: <input type="text"  @keydown.enter="change">
+    站點名稱搜尋: <input type="text" @input="$emit('changeText', $event.target.value)" :value="text">
   </p>
-  <button >gogo</button>
 </template>
 
 <script>
 export default {
   name: 'SearchInput',
-  props: {},
+  props: {
+    text: String,
+  },
    data() {
    return {
-     msg2:'1233'
    }},
    methods:{
-     change(){
-      this.$emit('changeText', this.msg2);
-     }
    },
 
 }
